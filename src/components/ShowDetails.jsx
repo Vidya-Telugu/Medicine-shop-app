@@ -1,10 +1,18 @@
 import React from 'react'
-
-export default function ShowDetails({details}) {
+//import { CartContext } from './CONTEXTS/Cartcontext';
+import { useContext } from 'react';
+import "./ShowDetails.css"
+import  { CartContext } from './CONTEXTS/Cartcontext';
+ function ShowDetails({details}) {
+    const {addToCart}=useContext(CartContext);
+    function handleCart(detail){
+       addToCart(detail);
+       detail.quantity--;
+    }
   return (
-    <div>
-      <table>
-         <tr>
+    <div className='show-details'>
+      <table className="table-container" border={1} cellPadding={5} cellSpacing={5} width="80%" align='center'>
+         <tr >
             <th>Medicine Name</th>
             <th>Description</th>
             <th>Price</th>
@@ -18,6 +26,10 @@ export default function ShowDetails({details}) {
                     <td>{detail.description}</td>
                     <td>{detail.price}</td>
                     <td>{detail.quantity}</td>
+                    <td>{detail.quantity>0?(detail.quantity):"Out of Stock"}</td>
+                    <td>
+                     <button disabled={detail.quantity<=0}
+                     onClick={()=>handleCart(detail)}>Add to cart</button></td>                 
                 </tr>
             )
          }
@@ -28,3 +40,5 @@ export default function ShowDetails({details}) {
     </div>
   )
 }
+
+export default ShowDetails

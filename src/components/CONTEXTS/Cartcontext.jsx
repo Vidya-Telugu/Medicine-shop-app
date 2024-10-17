@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createContext } from 'react'
-
 export const CartContext=createContext();
 
 export default function CartProvider({children}){
-    const[cart,setCart]=useState();
+    const[cart,setCart]=useState([]);
+    const [TotalAmount,setTotalAmount]=useState(0)
+    function handleAmount(){
+      const amount=cart.reduce((sum,item) =>sum+item.quantity*item.price,0)
+      setTotalAmount(amount)
+  
+    }
+    useEffect(()=>{
+      handleAmount();
+    },cart)
       function addToCart(medicine){
         setCart(prevCart=>{
             const checkItem=prevCart.find(item=>item.name===medicine.name);
@@ -18,7 +26,7 @@ export default function CartProvider({children}){
             }
         })
       }
-      return <CartContext.Provider value={{cart,addToCart}}>
+      return <CartContext.Provider value={{cart,addToCart,TotalAmount}}>
              {children}
       </CartContext.Provider>
 }
